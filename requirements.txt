@@ -1,0 +1,6 @@
+pandas==2.2.3
+paho-mqtt==2.1.0
+confluent-kafka==2.16.0
+databricks-sdk==0.152.0
+python-dotenv==1.2.3
+
