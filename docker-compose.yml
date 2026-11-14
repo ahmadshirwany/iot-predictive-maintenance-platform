@@ -31,3 +31,22 @@ services:
       - "8080:8080"
     depends_on:
       - redpanda
+  postgres:
+    image: postgres:16.4
+    container_name: postgres
+    profiles: [ "postgres" ]
+    environment:
+      POSTGRES_DB: iot
+      POSTGRES_USER: iot
+      POSTGRES_PASSWORD: iot
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U iot -d predictive-maintenance" ]
+      interval: 5s
+      retries: 10
+
+volumes:
+  pgdata:
