@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Fleet Monitor{% endblock %}</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <style>
+        :root {
+            --ok: #2e8b57;
+            --warn: #d98200;
+            --fault: #c62828;
+            --off: #6b7280;
+            --bg: #f5f7fa;
+            --card: #fff;
+            --text: #1b2430;
+            --muted: #6b7686;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            background: #1f3a5f;
+            color: #fff;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        main {
+            padding: 20px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+            margin-bottom: 16px;
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .kpi {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .kpi b {
+            display: block;
+            font-size: 28px;
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 99px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .OK {
+            background: var(--ok);
+        }
+
+        .WARNING {
+            background: var(--warn);
+        }
+
+        .FAULT {
+            background: var(--fault);
+        }
+
+        .OFFLINE {
+            background: var(--off);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+            gap: 8px;
+        }
+
+        .tile {
+            color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .tile b {
+            display: block;
+            font-size: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 6px 8px;
+            border-bottom: 1px solid #e6e9ee;
+        }
+
+        .live {
+            font-weight: 600;
+        }
+
+        .live.on {
+            color: var(--ok);
+        }
+
+        .live.off {
+            color: var(--fault);
+        }
+    </style>
+</head>
+
+<body>
+    <header><a href="{% url 'fleet' %}">Fleet Monitor</a>
+        <span class="muted" style="color:#c8d3e2">IoT predictive maintenance · live device status</span>
+    </header>
+    <main>{% block content %}{% endblock %}</main>
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<div class="card">
+    <span class="live {% if stream_live %}on{% else %}off{% endif %}">
+        {% if stream_live %}● Live{% else %}● Stream stopped{% endif %}
+    </span>
+    <span class="muted"> · fleet time {{ watermark|date:"d.m.Y H:i"|default:"–" }}
+        · last data stored {{ newest_seen|timesince|default:"never" }} ago</span>
+</div>
+
+<div class="row">
+    {% for status, n in counts %}
+    <div class="card kpi"><span class="badge {{ status }}">{{ status }}</span><b>{{ n }}</b></div>
+    {% endfor %}
+    <div class="card kpi"><span class="muted">Readings / last minute</span><b>{{ readings_last_minute }}</b></div>
+    <div class="card kpi"><span class="muted">Readings stored</span><b>{{ total_readings }}</b></div>
+</div>
+
+<div class="card">
+    <h3 style="margin-top:0">Machines</h3>
+    {% if devices %}
+    <div class="grid">
+        {% for d in devices %}
+        <a class="tile {{ d.status }}" href="{% url 'device_detail' d.device_id %}"
+            title="{{ d.device_id }} · {{ d.status }}">
+            <b>{{ d.machine_id }}</b>vib {{ d.vibration|floatformat:1 }}
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="muted">No data yet. Start the bridge, the sink and the simulator.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3 style="margin-top:0">Latest alerts</h3>
+    <table>
+        <tr>
+            <th>Device</th>
+            <th>Alert</th>
+            <th>Value</th>
+            <th>Event time</th>
+        </tr>
+        {% for a in alerts %}
+        <tr>
+            <td><a href="{% url 'device_detail' a.device_id %}">{{ a.device_id }}</a></td>
+            <td>{{ a.alert_type }}</td>
+            <td>{{ a.value|floatformat:1 }}</td>
+            <td>{{ a.event_time|date:"d.m.Y H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="muted">No alerts.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>

@@ -1,0 +1,7 @@
+{% extends "monitoring/base.html" %}
+{% block content %}
+{# HTMX: every 2 s, GET the partial and swap it in. No page reload, no JavaScript to write. #}
+<div hx-get="{% url 'fleet_partial' %}" hx-trigger="every 2s" hx-swap="innerHTML">
+    {% include "monitoring/_fleet_live.html" %}
+</div>
+{% endblock %}
