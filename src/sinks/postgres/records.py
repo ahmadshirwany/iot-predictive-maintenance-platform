@@ -62,10 +62,6 @@ def parse_reading(payload: dict, partition: int = 0, offset: int = 0) -> Reading
         raise InvalidReading(f"invalid reading: {e}") from e
 
 
-# Keep alias for backwards compatibility
-prase_reading = parse_reading
-
-
 def health(r: Reading) -> str:
     """FAULT = impossible value (broken sensor), WARNING = unusual but possible, OK = normal."""
     if r.pressure < 0:
