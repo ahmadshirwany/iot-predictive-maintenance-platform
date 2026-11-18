@@ -183,5 +183,5 @@ Both the PostgreSQL sink and Django dashboard support these optional overrides:
 - **Linter (Ruff):**
 
   ```powershell
-  ruff check src tests dashboard
+  ruff check .
   ```
