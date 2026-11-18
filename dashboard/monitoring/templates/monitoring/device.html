@@ -1,0 +1,58 @@
+{% extends "monitoring/base.html" %}
+{% block title %}{{ device.device_id }} · Fleet Monitor{% endblock %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.js"></script>
+<p><a href="{% url 'fleet' %}">← Back to fleet</a></p>
+<div class="card">
+    <h2 style="margin:0 0 6px">{{ device.device_id }}
+        <span class="badge {{ device.health }}">{{ device.health }}</span>
+    </h2>
+    <span class="muted">firmware {{ device.firmware }} · last reading
+        {{ device.last_event_time|date:"d.m.Y H:i" }} · {{ reading_count }} readings stored</span>
+</div>
+<div class="row">
+    <div class="card kpi"><span class="muted">Volt</span><b>{{ device.volt|floatformat:1 }}</b></div>
+    <div class="card kpi"><span class="muted">Rotate</span><b>{{ device.rotate|floatformat:1 }}</b></div>
+    <div class="card kpi"><span class="muted">Pressure</span><b>{{ device.pressure|floatformat:1 }}</b></div>
+    <div class="card kpi"><span class="muted">Vibration</span><b>{{ device.vibration|floatformat:1 }}</b></div>
+    <div class="card kpi"><span class="muted">Temperature</span>
+        <b>{{ device.temperature|floatformat:1|default:"–" }}</b>
+    </div>
+</div>
+<div class="card">
+    <h3 style="margin-top:0">Last 72 readings</h3><canvas id="chart" height="110"></canvas>
+</div>
+<div class="card">
+    <h3 style="margin-top:0">Alerts</h3>
+    <table>
+        <tr>
+            <th>Alert</th>
+            <th>Value</th>
+            <th>Event time</th>
+        </tr>
+        {% for a in alerts %}
+        <tr>
+            <td>{{ a.alert_type }}</td>
+            <td>{{ a.value|floatformat:1 }}</td>
+            <td>{{ a.event_time|date:"d.m.Y H:i" }}</td>
+        </tr>
+        {% empty %}<tr>
+            <td colspan="3" class="muted">No alerts.</td>
+        </tr>{% endfor %}
+    </table>
+</div>
+{{ chart|json_script:"chart-data" }}
+<script>
+    const d = JSON.parse(document.getElementById("chart-data").textContent);
+    new Chart(document.getElementById("chart"), {
+        type: "line",
+        data: {
+            labels: d.labels, datasets: [
+                { label: "Vibration", data: d.vibration, borderColor: "#d98200", tension: .2, pointRadius: 0 },
+                { label: "Pressure", data: d.pressure, borderColor: "#2e6db4", tension: .2, pointRadius: 0 },
+            ]
+        },
+        options: { interaction: { mode: "index", intersect: false }, scales: { x: { ticks: { maxTicksLimit: 12 } } } },
+    });
+</script>
+{% endblock %}
